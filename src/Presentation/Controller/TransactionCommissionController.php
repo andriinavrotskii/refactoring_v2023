@@ -21,7 +21,7 @@ readonly class TransactionCommissionController
         $inputFileName = $input->getInputFileName();
 
         if (null === $inputFileName) {
-            echo "Please provide file with input data.\n";
+            $this->output->echo('Please provide file with input data.');
 
             return;
         }

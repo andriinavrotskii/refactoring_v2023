@@ -13,6 +13,6 @@ $loader = new YamlFileLoader($container, new FileLocator(__DIR__ . '/config'));
 $loader->load('services.yaml');
 $container->compile();
 
+/** @var TransactionCommissionController $controller */
 $controller = $container->get(TransactionCommissionController::class);
 $controller->run(Input::createFromArgv($argv));
-
