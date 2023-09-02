@@ -4,6 +4,8 @@ services:
     autoconfigure: true
     public: true
 
+  Psr\Log\LoggerInterface: '@App\Infrastructure\Log\Logger'
+
   App\:
     resource: '../src/*'
     exclude:

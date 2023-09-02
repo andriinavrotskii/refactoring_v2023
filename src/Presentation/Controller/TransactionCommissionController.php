@@ -6,6 +6,7 @@ use App\Common\Output\OutputInterface;
 use App\Common\ValueObject\TransactionData;
 use App\Presentation\ValueObject\Input;
 use App\TransactionCommission\TransactionCommissionService;
+use Psr\Log\LoggerInterface;
 use Throwable;
 
 readonly class TransactionCommissionController
@@ -13,6 +14,7 @@ readonly class TransactionCommissionController
     public function __construct(
         private readonly TransactionCommissionService $transactionCommissionService,
         private readonly OutputInterface $output,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -40,9 +42,7 @@ readonly class TransactionCommissionController
 
                 $this->output->echo($commission);
             } catch (Throwable $exception) {
-                // TODO: log
-                throw $exception;
-
+                $this->logger->alert($exception->getMessage());
                 continue;
             }
         }
