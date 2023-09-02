@@ -2,6 +2,7 @@
 
 namespace App\Presentation\Controller;
 
+use App\Common\File\FileManagerInterface;
 use App\Common\Output\OutputInterface;
 use App\Common\ValueObject\TransactionData;
 use App\Presentation\ValueObject\Input;
@@ -13,6 +14,7 @@ readonly class TransactionCommissionController
 {
     public function __construct(
         private readonly TransactionCommissionService $transactionCommissionService,
+        private readonly FileManagerInterface $fileManager,
         private readonly OutputInterface $output,
         private readonly LoggerInterface $logger,
     ) {
@@ -28,7 +30,7 @@ readonly class TransactionCommissionController
             return;
         }
 
-        foreach (explode("\n", file_get_contents($inputFileName)) as $row) {
+        foreach (explode("\n", $this->fileManager->getContent($inputFileName)) as $row) {
             $row = trim($row);
 
             if (empty($row)) {
