@@ -5,15 +5,15 @@ use App\Common\Output\OutputInterface;
 use App\Presentation\Controller\TransactionCommissionController;
 use App\Presentation\ValueObject\Input;
 use App\TransactionCommission\TransactionCommissionService;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class TransactionCommissionControllerTest extends TestCase
 {
-    public function testFirst(): void
+    #[DataProvider('dataProvider')]
+    public function testFirst(array $data): void
     {
-        $this->assertTrue(true);
-
         $inputMock = $this->createMock(Input::class);
         $inputMock->expects($this->once())
             ->method('getInputFileName')
@@ -33,5 +33,13 @@ class TransactionCommissionControllerTest extends TestCase
         );
 
         $controller->run($inputMock);
+    }
+
+    public function dataProvider(): iterable
+    {
+        yield [
+            'filename' => null,
+//            'fileManager' =>
+        ];
     }
 }

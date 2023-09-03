@@ -2,7 +2,9 @@
 
 namespace App\Common\File;
 
+use Traversable;
+
 interface FileManagerInterface
 {
-    public function getContent(string $fileName): string;
+    public function getRowsFromFile(string $fileName): Traversable|string;
 }

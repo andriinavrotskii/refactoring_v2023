@@ -2,6 +2,8 @@
 
 namespace App\Presentation\ValueObject;
 
+use App\Common\Exception\InputException;
+
 class Input
 {
     public function __construct(
@@ -14,8 +16,14 @@ class Input
         return new Input($argv);
     }
 
-    public function getInputFileName(): ?string
+    public function getInputFileName(): string
     {
-        return $this->argv[1] ?? null;
+        $inputFileName = $this->argv[1] ?? null;
+
+        if (null === $inputFileName) {
+            throw new InputException('Please provide file with input data.');
+        }
+
+        return $inputFileName;
     }
 }

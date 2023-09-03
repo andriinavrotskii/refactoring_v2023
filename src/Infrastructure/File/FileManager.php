@@ -2,18 +2,29 @@
 
 namespace App\Infrastructure\File;
 
-class FileManager
+use App\Common\File\FileManagerInterface;
+use Traversable;
+
+class FileManager implements FileManagerInterface
 {
-    private const NO_CONTENT = '';
-
-    public function getContent(string $fileName): string
+    public function getRowsFromFile(string $fileName): Traversable|string
     {
-        $contents = file_get_contents($fileName);
+        $file = fopen($fileName, 'r');
 
-        if (false === $contents) {
-            return self::NO_CONTENT;
+        if (!$file) {
+            return;
         }
 
-        return $contents;
+        while (($row = fgets($file)) !== false) {
+            $row = trim($row);
+
+            if (empty($row)) {
+                continue;
+            }
+
+            yield $row;
+        }
+
+        fclose($file);
     }
 }

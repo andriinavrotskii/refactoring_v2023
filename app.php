@@ -1,5 +1,6 @@
 <?php
 
+use App\Common\Output\OutputInterface;
 use App\Presentation\Controller\TransactionCommissionController;
 use App\Presentation\ValueObject\Input;
 use Symfony\Component\Config\FileLocator;
@@ -15,4 +16,10 @@ $container->compile();
 
 /** @var TransactionCommissionController $controller */
 $controller = $container->get(TransactionCommissionController::class);
-$controller->run(Input::createFromArgv($argv));
+try {
+    $controller->run(Input::createFromArgv($argv));
+} catch (Exception $exception) {
+    /** @var $output OutputInterface $controller */
+    $output = $container->get(OutputInterface::class);
+    $output->echo($exception->getMessage());
+}

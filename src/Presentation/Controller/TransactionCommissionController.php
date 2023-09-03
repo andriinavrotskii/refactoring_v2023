@@ -24,19 +24,7 @@ readonly class TransactionCommissionController
     {
         $inputFileName = $input->getInputFileName();
 
-        if (null === $inputFileName) {
-            $this->output->echo('Please provide file with input data.');
-
-            return;
-        }
-
-        foreach (explode("\n", $this->fileManager->getContent($inputFileName)) as $row) {
-            $row = trim($row);
-
-            if (empty($row)) {
-                continue;
-            }
-
+        foreach ($this->fileManager->getRowsFromFile($inputFileName) as $row) {
             try {
                 $commission = $this->transactionCommissionService->calculateCommission(
                     TransactionData::createFromString($row)
