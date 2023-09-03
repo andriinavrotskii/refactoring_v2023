@@ -2,6 +2,7 @@
 
 namespace App\Presentation\Controller;
 
+use App\Common\Exception\InputException;
 use App\Common\File\FileManagerInterface;
 use App\Common\Output\OutputInterface;
 use App\Common\ValueObject\TransactionData;
@@ -10,7 +11,7 @@ use App\TransactionCommission\TransactionCommissionService;
 use Psr\Log\LoggerInterface;
 use Throwable;
 
-readonly class TransactionCommissionController
+class TransactionCommissionController
 {
     public function __construct(
         private readonly TransactionCommissionService $transactionCommissionService,
@@ -20,6 +21,9 @@ readonly class TransactionCommissionController
     ) {
     }
 
+    /**
+     * @throws InputException
+     */
     public function run(Input $input): void
     {
         $inputFileName = $input->getInputFileName();

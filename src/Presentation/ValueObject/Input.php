@@ -7,7 +7,7 @@ use App\Common\Exception\InputException;
 class Input
 {
     public function __construct(
-        private readonly array $argv,
+        private array $argv,
     ) {
     }
 
@@ -16,6 +16,9 @@ class Input
         return new Input($argv);
     }
 
+    /**
+     * @throws InputException
+     */
     public function getInputFileName(): string
     {
         $inputFileName = $this->argv[1] ?? null;
