@@ -12,7 +12,7 @@ class FileManager implements FileManagerInterface
         $file = fopen($fileName, 'r');
 
         if (!$file) {
-            yield;
+            return;
         }
 
         while (($row = fgets($file)) !== false) {

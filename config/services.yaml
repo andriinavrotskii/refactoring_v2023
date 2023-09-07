@@ -5,6 +5,7 @@ services:
     public: true
 
   Psr\Log\LoggerInterface: '@App\Infrastructure\Log\Logger'
+  App\Common\Output\OutputInterface: '@App\Infrastructure\Output\OutputService'
 
   App\:
     resource: '../src/*'

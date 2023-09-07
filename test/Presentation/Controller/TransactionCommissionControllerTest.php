@@ -2,70 +2,65 @@
 
 use App\Common\File\FileManagerInterface;
 use App\Common\Output\OutputInterface;
+use App\Common\ValueObject\TransactionData;
 use App\Presentation\Controller\TransactionCommissionController;
+use App\Presentation\Factory\TransactionDataFactory;
 use App\Presentation\ValueObject\Input;
 use App\TransactionCommission\TransactionCommissionService;
-use PHPUnit\Framework\Attributes\DataProvider;
+use App\TransactionCommission\ValueObject\Commission;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
 class TransactionCommissionControllerTest extends TestCase
 {
-    #[DataProvider('dataProvider')]
-    public function testCalculateCommission(
-        array $fileManagerData,
-        array $transactionCommissionServiceData,
-        array $outputData,
-        array $loggerData,
-    ): void {
+    public function testPositive(): void {
         $inputMock = $this->createMock(Input::class);
-        $inputMock->expects($this->once())
+        $inputMock
+            ->expects($this->once())
             ->method('getInputFileName')
             ->willReturn('filename');
 
         $fileManagerMock = $this->createMock(FileManagerInterface::class);
-        $fileManagerMock->expects($this->exactly($fileManagerData['expects']))
+        $fileManagerMock
+            ->expects($this->exactly(1))
             ->method('getRowsFromFile')
-            ->willReturn($fileManagerData['willReturn']);
+            ->willReturn(new ArrayIterator(['string']));
 
+        $transactionDataMock = $this->createMock(TransactionData::class);
+
+        $transactionDataFactoryMock = $this->createMock(TransactionDataFactory::class);
+        $transactionDataFactoryMock
+            ->expects($this->exactly(1))
+            ->method('createFromString')
+            ->with('string')
+            ->willReturn($transactionDataMock);
+
+        $commissionMock = $this->createMock(Commission::class);
         $transactionCommissionServiceMock = $this->createMock(TransactionCommissionService::class);
-        $transactionCommissionServiceMock->expects($this->exactly($transactionCommissionServiceData['expects']))
-            ->method('calculateCommission');
+        $transactionCommissionServiceMock
+            ->expects($this->exactly(1))
+            ->method('calculateCommission')
+            ->with($transactionDataMock)
+            ->willReturn($commissionMock);
 
         $outputMock = $this->createMock(OutputInterface::class);
-        $outputMock->expects($this->exactly($outputData['expects']))
+        $outputMock
+            ->expects($this->exactly(1))
             ->method('echo');
 
         $loggerMock = $this->createMock(LoggerInterface::class);
-        $loggerMock->expects($this->exactly($loggerData['expects']))
+        $loggerMock
+            ->expects($this->exactly(0))
             ->method('alert');
 
         $controller = new TransactionCommissionController(
             $transactionCommissionServiceMock,
             $fileManagerMock,
+            $transactionDataFactoryMock,
             $outputMock,
             $loggerMock,
         );
 
         $controller->run($inputMock);
-    }
-
-    public static function dataProvider(): iterable
-    {
-        yield [
-            'fileManager' => [
-                'expects' => 1,
-                'willReturn' => new ArrayObject(['{"bin":"11111111","amount":"111.00","currency":"EUR"}']),
-            ],
-            'transactionCommissionService' => [
-                'expects' => 1,
-            ],
-            'output' => [
-                'expects' => 1,
-            ],
-            'logger' => [
-                'expects' => 0,
-            ],
-        ];
     }
 }
