@@ -20,6 +20,8 @@ docker compose exec php bash
 php index.php input.txt
 ```
 
+tip: for logs i used ```Psr\Log\NullLogger```
+
 # Run tests
 
 Just one test for example.
